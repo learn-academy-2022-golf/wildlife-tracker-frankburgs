@@ -162,35 +162,64 @@ end
 Copy and paste all the controller methods and change the keywords
 That was difficult but I think it works.
 
-## Can update an existing animal sighting in the database
-✅
+## Can update an existing animal sighting in the database✅
 
-## Can remove an animal sighting in the database
-✅
 
-# Story 3: In order to see the wildlife sightings, as a user of the API, I need to run reports on animal sightings.
+## Can remove an animal sighting in the database✅
+
+
+# Story 3: ✅
+In order to see the wildlife sightings, as a user of the API, I need to run reports on animal sightings.
 # Branch: animal-sightings-reports
 # Acceptance Criteria
 
-Can see one animal with all its associated sightings
+## Can see one animal with all its associated sightings ✅
 Hint: Checkout this example on how to include associated records
-Can see all the all sightings during a given time period
+
+Add to the animal controller
+
+    render json: animals, include: [:sightings]
+
+This works with URL localhost:3000/animals/1 ... 2 etc
+
+## Can see all the all sightings during a given time period ✅
+So I need to do another migration,
+Removing the "date" column or changing the datatype from string to date
+
+remove_column :sightings, :sighting_date
+add_column :sightings, :sighting_date, :date
+
+Hint: Date is written in Active Record as yyyy-mm-dd (“2022-07-28")
 Hint: Your controller can use a range to look like this:
+
 class SightingsController < ApplicationController
+
   def index
+
     sightings = Sighting.where(date: params[:start_date]..params[:end_date])
     render json: sightings
+
   end
+
 end
+
 Hint: Be sure to add the start_date and end_date to what is permitted in your strong parameters method
+
+    def sighting_params
+            params.require(:sighting).permit(:start_date, :end_date, :animal_id, :sighting_date)
+    end
+
 Hint: Utilize the params section in Postman to ease the developer experience
+
 Hint: Routes with params
 
 
 Stretch Challenges
-# Story 4: In order to see the wildlife sightings contain valid data, as a user of the API, I need to include proper specs.
+# Story 4: 
+In order to see the wildlife sightings contain valid data, as a user of the API, I need to include proper specs.
 Branch: animal-sightings-specs
 Acceptance Criteria
+
 Validations will require specs in spec/models and the controller methods will require specs in spec/requests.
 
 ## Can see validation errors if an animal doesn't include a common name and scientific binomial
