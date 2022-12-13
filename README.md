@@ -94,7 +94,7 @@ def animal_params
         params.require(:animal).permit(:common_name, :scientific_binomial)
 end
 
-Doing a "post" requenst in Postman to localhost:3000/animals with the RAW JSON in the BODY of an object with key value pairs of the two params and values will create a new entry in the database
+Doing a "post" request in Postman to localhost:3000/animals with the RAW JSON in the BODY of an object with key value pairs of the two params and values will create a new entry in the database
 
 ## Can update an existing animal in the database
 Add to controller
@@ -128,18 +128,45 @@ The URL this maps to is .../animals/:id
 
 ### Git hygiene and move on
 
-# Story 2: In order to track wildlife sightings, as a user of the API, I need to manage animal sightings.
+# Story 2: ✅
+In order to track wildlife sightings, as a user of the API, I need to manage animal sightings.
 # Branch: sighting-crud-actions 🪵
 # Acceptance Criteria
 
-## Create a resource for animal sightings with the following information: latitude, longitude, date
+## Create a resource for animal sightings with the following information: latitude, longitude, date ✅ (location)
 Hint: An animal has_many sightings (rails g resource Sighting animal_id:integer ...)
 Hint: Date is written in Active Record as yyyy-mm-dd (“2022-07-28")
 
-## Can create a new animal sighting in the database
-## Can update an existing animal sighting in the database
-## Can remove an animal sighting in the database
+### $ rails g resource Sighting animal_id:integer sighting_date:string
+### $ rails db:migrate
 
+Add the following to app/models/animal.rb
+has_many :sightings
+And the following to the sighting class
+belongs_to :animal
+
+### So we totally forgot to add latitute and longitude columns
+### $ rails generate migration add_columns_to_sighting
+
+def change
+    add_column :sightings, :location, :string
+end
+
+### $ rails db:migrate
+== 20221213213413 AddColumnsToSighting: migrating =============================
+-- add_column(:sightings, :location, :string)
+   -> 0.0066s
+== 20221213213413 AddColumnsToSighting: migrated (0.0066s) ====================
+
+## Can create a new animal sighting in the database ✅
+Copy and paste all the controller methods and change the keywords
+That was difficult but I think it works.
+
+## Can update an existing animal sighting in the database
+✅
+
+## Can remove an animal sighting in the database
+✅
 
 # Story 3: In order to see the wildlife sightings, as a user of the API, I need to run reports on animal sightings.
 # Branch: animal-sightings-reports
