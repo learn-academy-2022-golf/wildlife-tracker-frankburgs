@@ -1,3 +1,7 @@
+In order to start over
+1. rails db:drop
+2. Delete the schema folder
+
 # Story 1:
 In order to track wildlife sightings, as a user of the API, I need to manage animals.
 Branch: animal-crud-actions 🪵
@@ -192,39 +196,48 @@ add_column :sightings, :sighting_date, :date
 Hint: Date is written in Active Record as yyyy-mm-dd (“2022-07-28")
 Hint: Your controller can use a range to look like this:
 
-class SightingsController < ApplicationController
+    class SightingsController < ApplicationController
+        def index
+            sightings = Sighting.where(date: params[:start_date]..params[:end_date])
+            render json: sightings
+        end
+    end
 
-  def index
-
-    sightings = Sighting.where(date: params[:start_date]..params[:end_date])
-    render json: sightings
-
-  end
-
-end
-
+Hint: Utilize the params section in Postman to ease the developer experience
+Hint: Routes with params
 Hint: Be sure to add the start_date and end_date to what is permitted in your strong parameters method
 
     def sighting_params
             params.require(:sighting).permit(:start_date, :end_date, :animal_id, :sighting_date)
     end
 
-Hint: Utilize the params section in Postman to ease the developer experience
-
-Hint: Routes with params
-
-
 Stretch Challenges
 # Story 4: 
 In order to see the wildlife sightings contain valid data, as a user of the API, I need to include proper specs.
 Branch: animal-sightings-specs
 Acceptance Criteria
-
 Validations will require specs in spec/models and the controller methods will require specs in spec/requests.
 
 ## Can see validation errors if an animal doesn't include a common name and scientific binomial
+So we already did bundle add and generate rspec
+
+LoadError:
+SyntaxError:
+
+I guess we forgot the following
+### $ gem install rspec
+
+New error
+NameError:
+
+https://stackoverflow.com/questions/34567949/rails-rspec-require-cannot-load-such-file-rails-helper-loaderror
+
+So now it works, the stackoverflow above says to be in the main folder of your rails app, then use
+### $ rspec spec/rest_of_path/mytest_spec.rb
+
 
 ## Can see validation errors if a sighting doesn't include latitude, longitude, or a date
+
 
 ## Can see a validation error if an animal's common name exactly matches the scientific binomial
 
@@ -235,9 +248,11 @@ Validations will require specs in spec/models and the controller methods will re
 ## Can see a status code of 422 when a post request can not be completed because of validation errors
 Hint: Handling Errors in an API Application the Rails Way
 
+
 # Story 5: In order to increase efficiency, as a user of the API, I need to add an animal and a sighting at the same time.
 Branch: submit-animal-with-sightings
 Acceptance Criteria
+
 
 ## Can create new animal along with sighting data in a single API request
 Hint: Look into accepts_nested_attributes_for
